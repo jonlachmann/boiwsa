@@ -59,7 +59,6 @@ find_outliers <- function(y,
 
     Xs_t <- t(Xs)
     while (run) {
-      cat(ncol(Xs), "")
       Ts <- numeric(length(out.search.points))
       ts_idx <- 1
       Xst2_inv <- solve(crossprod(Xs))
@@ -97,9 +96,7 @@ find_outliers <- function(y,
       f.sel.ao.dates <- NULL
     }
 
-    cat("\n")
     while (run) {
-      cat(".")
       AObd <- my_ao(dates = dates, out.list = lubridate::as_date(c(my.AO.list, f.sel.ao.dates)))
 
       Xst <- cbind(X, H, AObd)
