@@ -41,6 +41,7 @@ boiwsa <- function(x,
                    ao.list = NULL,
                    my.k_l = NULL,
                    H = NULL,
+                   horizon = 0,
                    ic = "aicc",
                    method = "additive") {
   # First run --------------------------------------
@@ -95,8 +96,11 @@ boiwsa <- function(x,
   }
 
   if (sum(my.k_l > 0)) {
-    X <- fourier_vars(k = my.k_l[1], l = my.k_l[2], dates = dates)
+    forecast_dates <- as.character(seq(from = as.Date(dates[length(dates)]), by = "7 days", length.out = horizon + 1)[-1])
+    X <- fourier_vars(k = my.k_l[1], l = my.k_l[2], dates = c(dates, forecast_dates))
+    AO <- rbind(AO, matrix(0, horizon, ncol(AO)))
     Xs <- cbind(X, H, AO)
+    Xs_hist <- Xs[seq_len(length(dates)), , drop = FALSE]
 
     # Creating weights
     my.years <- unique(lubridate::year(dates))
@@ -114,13 +118,13 @@ boiwsa <- function(x,
       diag(Wi[, , i]) <- w / sum(w)
     }
 
-    sf <- rep(0, length(dates))
-    hol.factors <- rep(0, length(dates))
-    out.factors <- rep(0, length(dates))
+    sf <- rep(0, length(dates) + horizon)
+    hol.factors <- rep(0, length(dates) + horizon)
+    out.factors <- rep(0, length(dates) + horizon)
 
     for (i in seq_along(my.years)) {
-      Xs_t_Wi <- t(Xs) %*% Wi[, , i]
-      beta <- solve(Xs_t_Wi %*% Xs) %*% Xs_t_Wi %*% y
+      Xs_t_Wi <- t(Xs_hist) %*% Wi[, , i]
+      beta <- solve(Xs_t_Wi %*% Xs_hist) %*% Xs_t_Wi %*% y
 
       n.i <- (lubridate::year(dates) == my.years[i])
       sf[n.i] <- (Xs[, 1:(length(beta) - nc.ao)] %*% beta[1:(length(beta) - nc.ao)])[n.i]
@@ -139,11 +143,13 @@ boiwsa <- function(x,
         out.factors <- NULL
       }
     }
+    sf_hist <- sf[seq_len(length(dates))]
+    out.factors_hist <- out.factors[seq_len(length(dates))]
 
     if (!is.null(out.factors)) {
-      seas.out.adj <- x - sf - out.factors
+      seas.out.adj <- x - sf_hist - out.factors_hist
     } else {
-      seas.out.adj <- x - sf
+      seas.out.adj <- x - sf_hist
     }
 
     # Second run --------------------------------------
@@ -176,8 +182,10 @@ boiwsa <- function(x,
       }
     }
 
-    X <- fourier_vars(k = my.k_l[1], l = my.k_l[2], dates = dates)
+    X <- fourier_vars(k = my.k_l[1], l = my.k_l[2], dates = c(dates, forecast_dates))
+    AO <- rbind(AO, matrix(0, horizon, ncol(AO)))
     Xs <- cbind(X, H, AO)
+    Xs_hist <- Xs[seq_len(length(dates)), , drop = FALSE]
     my.years <- unique(lubridate::year(dates))
     Wi <- array(0, dim = c(length(dates), length(dates), length(my.years)))
     w.i <- rep(0, length(my.years))
@@ -194,13 +202,13 @@ boiwsa <- function(x,
       diag(Wi[, , i]) <- w / sum(w)
     }
 
-    sf <- rep(0, length(dates))
-    hol.factors <- rep(0, length(dates))
-    out.factors <- rep(0, length(dates))
+    sf <- rep(0, length(dates) + horizon)
+    hol.factors <- rep(0, length(dates) + horizon)
+    out.factors <- rep(0, length(dates) + horizon)
 
     for (i in seq_along(my.years)) {
-      Xs_t_Wi <- t(Xs) %*% Wi[, , i]
-      beta <- solve(Xs_t_Wi %*% Xs) %*% Xs_t_Wi %*% y
+      Xs_t_Wi <- t(Xs_hist) %*% Wi[, , i]
+      beta <- solve(Xs_t_Wi %*% Xs_hist) %*% Xs_t_Wi %*% y
       n.i <- (lubridate::year(dates) == my.years[i])
       sf[n.i] <- (Xs[, 1:(length(beta) - nc.ao)] %*% beta[1:(length(beta) - nc.ao)])[n.i]
 
@@ -218,16 +226,18 @@ boiwsa <- function(x,
         out.factors <- NULL
       }
     }
+    sf_hist <- sf[seq_len(length(dates))]
+    out.factors_hist <- out.factors[seq_len(length(dates))]
 
     if (!is.null(out.factors)) {
-      seas.out.adj <- x - sf - out.factors
+      seas.out.adj <- x - sf_hist - out.factors_hist
     } else {
-      seas.out.adj <- x - sf
+      seas.out.adj <- x - sf_hist
     }
     trend.fin <- supsmu(seq_along(x), seas.out.adj)$y
 
     # computing final seasonal adjusted series
-    sa <- x - sf
+    sa <- x - sf_hist
 
     if (method == "multiplicative") {
       sa <- exp(sa)
@@ -236,7 +246,7 @@ boiwsa <- function(x,
       x <- exp(x)
     }
 
-    lm.data <- as.data.frame(cbind(y, Xs))
+    lm.data <- as.data.frame(cbind(y, Xs_hist))
     m <- lm(y ~ . - 1, data = lm.data)
 
     # Creating output --------------------------------------
