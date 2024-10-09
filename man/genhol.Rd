@@ -28,8 +28,7 @@ using the Easter formula in Table 2 of Findley et al. (1998). Uses calendar cent
 # Creating moving holiday variable for Israeli Rosh Hashanah
 data(gasoline.data)
 data(holiday_dates_il) # dates of Israeli Rosh Hashanah and Pesach
-movehol=genhol(gasoline.data$date,holiday.dates = holiday_dates_il$rosh)
-
+movehol <- genhol(gasoline.data$date, holiday.dates = holiday_dates_il$rosh)
 
 }
 \references{

@@ -22,8 +22,8 @@ Creates sine and cosine variables to capture intramonthly and intrayearly cycles
 \examples{
 
 # create a vector of dates
-dates=seq.Date(from=as.Date("2023-01-02"),by="weeks",length.out = 100)
+dates <- seq.Date(from = as.Date("2023-01-02"), by = "weeks", length.out = 100)
 # Create a matrix with 20 yearly and 6 monthly pairs of sine and cosine variables
-X=fourier_vars(k=20,l=6,dates=dates)
+X <- fourier_vars(k = 20, l = 6, dates = dates)
 
 }

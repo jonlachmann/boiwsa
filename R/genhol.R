@@ -23,51 +23,42 @@
 #' # Creating moving holiday variable for Israeli Rosh Hashanah
 #' data(gasoline.data)
 #' data(holiday_dates_il) # dates of Israeli Rosh Hashanah and Pesach
-#' movehol=genhol(gasoline.data$date,holiday.dates = holiday_dates_il$rosh)
+#' movehol <- genhol(gasoline.data$date, holiday.dates = holiday_dates_il$rosh)
 #'
-#'
-genhol=function(dates,holiday.dates,start=7,end=7){
+genhol <- function(dates, holiday.dates, start = 7, end = 7) {
+  start.date <- min(dates) - lubridate::days(6)
+  end.date <- max(dates)
 
-  start.date=min(dates)-lubridate::days(6)
-  end.date=max(dates)
+  df0 <- data.frame(date = seq.Date(from = start.date, to = end.date, by = "day"), daily = seq.Date(from = start.date, to = end.date, by = "day"))
+  df1 <- data.frame(date = dates, weekly = dates)
 
-  df0=data.frame(date=seq.Date(from=start.date,to=end.date,by="day"),daily=seq.Date(from=start.date,to=end.date,by="day"))
-  df1=data.frame(date=dates,weekly=dates)
+  df2 <- merge(df0, df1, by = "date", all = T)
 
-  df2=merge(df0,df1,by="date",all = T)
+  df2 %>% tidyr::fill("weekly", .direction = "up") -> df2
 
-  df2%>%tidyr::fill("weekly",.direction = "up")->df2
+  df2$hag <- 0
 
-  df2$hag=0
+  for (i in seq_along(holiday.dates)) {
+    hdate <- holiday.dates[i]
 
-  for (i in 1:length(holiday.dates)) {
-
-    hdate=holiday.dates[i]
-
-    df2[(df2$date<=hdate+lubridate::days(end))&(df2$date>=hdate-lubridate::days(start)),"hag"]=1
+    df2[(df2$date <= hdate + lubridate::days(end)) & (df2$date >= hdate - lubridate::days(start)), "hag"] <- 1
   }
 
+  df2 %>%
+    dplyr::select("weekly", "hag") %>%
+    dplyr::group_by(.data$weekly) %>%
+    dplyr::summarise(t = sum(.data$hag)) -> df3
 
+  df3[df3$t != 0, "t"] <- df3[df3$t != 0, "t"] / (start + end + 1)
 
-  df2%>%
-    dplyr::select("weekly","hag")%>%
-    dplyr::group_by(.data$weekly)%>%
-    dplyr::summarise(t=sum(.data$hag))->df3
-
-
-  df3[df3$t!=0,"t"]=df3[df3$t!=0,"t"]/(start+end+1)
-
-  m.t=df3%>%
-    dplyr::filter(t!=0)%>%
-    dplyr::select(t)%>%
-    dplyr::summarise(across(everything(), mean))%>%
+  m.t <- df3 %>%
+    dplyr::filter(t != 0) %>%
+    dplyr::select(t) %>%
+    dplyr::summarise(across(everything(), mean)) %>%
     as.numeric()
 
-  df3[df3$t!=0,"t"]=df3[df3$t!=0,"t"]-m.t
+  df3[df3$t != 0, "t"] <- df3[df3$t != 0, "t"] - m.t
 
-  colnames(df3)=c("date","moving_holiday")
-
-
+  colnames(df3) <- c("date", "moving_holiday")
   return(df3)
-
 }

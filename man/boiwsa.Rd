@@ -57,11 +57,12 @@ m lm object. Unweighted OLS regression on the full sample
 Performs seasonal adjustment of weekly data. For more details on the usage of this function see the paper or the examples on Github.
 }
 \examples{
- # Not run
- # Seasonal adjustment of weekly US gasoline production
- \donttest{
- data("gasoline.data")
- res=boiwsa(x=gasoline.data$y,dates=gasoline.data$date)}
+# Not run
+# Seasonal adjustment of weekly US gasoline production
+\donttest{
+data("gasoline.data")
+res <- boiwsa(x = gasoline.data$y, dates = gasoline.data$date)
+}
 }
 \author{
 Tim Ginker

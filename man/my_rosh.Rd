@@ -26,6 +26,6 @@ Creates a dummy moving holiday variable for the weekly number of initial registr
 # Creating moving holiday dummy variable for Israeli Rosh Hashanah
 data(gasoline.data)
 data(holiday_dates_il) # dates of Israeli Rosh Hashanah and Pesach
-movehol=my_rosh(gasoline.data$date,holiday.dates = holiday_dates_il$rosh)
+movehol <- my_rosh(gasoline.data$date, holiday.dates = holiday_dates_il$rosh)
 
 }

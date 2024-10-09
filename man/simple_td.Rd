@@ -23,14 +23,11 @@ library(dplyr)
 data(dates_il)
 data(gasoline.data)
 
-dates_il\%>\%
-  dplyr::select(DATE_VALUE,ISR_WORKING_DAY_PART)\%>\%
-  `colnames<-`(c("date","WORKING_DAY_PART"))\%>\%
-  dplyr::mutate(date=as.Date(date))->df.td
+dates_il \%>\%
+  dplyr::select(DATE_VALUE, ISR_WORKING_DAY_PART) \%>\%
+  `colnames<-`(c("date", "WORKING_DAY_PART")) \%>\%
+  dplyr::mutate(date = as.Date(date)) -> df.td
 
-td=simple_td(dates = gasoline.data$date,df.td = df.td)
-
-
-
+td <- simple_td(dates = gasoline.data$date, df.td = df.td)
 
 }

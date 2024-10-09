@@ -4,25 +4,16 @@
 \alias{find_opt}
 \title{Find optimal number of fourier variables}
 \usage{
-find_opt(
-  x,
-  dates,
-  H = NULL,
-  AO = NULL,
-  method = "additive",
-  l.max = 24,
-  k.max = 42,
-  by = 6
-)
+find_opt(y, dates, H = NULL, AO = NULL)
 }
 \arguments{
-\item{x}{Numeric vector. Time series to seasonally adjust}
-
 \item{dates}{a vector of class "Date", containing the data dates}
 
 \item{H}{(optional) Matrix with holiday and trading day variables}
 
 \item{AO}{(optional) Matrix with additive outlier variables}
+
+\item{x}{Numeric vector. Time series to seasonally adjust}
 
 \item{method}{Decomposition method: "additive" or "multiplicative". By default uses the additive method}
 
@@ -42,7 +33,7 @@ Searches through the model space to identify the best number of trigonometric va
 
 data(gasoline.data)
 
-res=find_opt(x=gasoline.data$y,dates=gasoline.data$date)
+res <- find_opt(x = gasoline.data$y, dates = gasoline.data$date)
 print(res)
 
 }

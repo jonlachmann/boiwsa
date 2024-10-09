@@ -19,7 +19,7 @@
 #'   \item{\code{ISR_WORKING_DAY_PART}}{1: full working day, 0.5: half working day, 0: holiday}
 #'   \item{\code{JEWISH_FULL_DATE}}{Jewish date}
 #'   \item{\code{DATE_WEEK_NUMBER}}{Weekday}
-#'}
+#' }
 #' @source Personal
 "dates_il"
 
@@ -30,7 +30,7 @@
 #'   \item{\code{year}}{Year}
 #'   \item{\code{rosh}}{Rosh Hashanah date}
 #'   \item{\code{pesah}}{Pesach date}
-#'}
+#' }
 #' @source Personal
 "holiday_dates_il"
 

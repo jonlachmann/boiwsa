@@ -5,18 +5,15 @@
 \title{Find additive outliers}
 \usage{
 find_outliers(
-  x,
+  y,
   dates,
-  out.tolerance = 3.8,
+  out.tolerance = out.threshold,
   my.AO.list = NULL,
   H = NULL,
-  my.k_l = NULL,
-  method = "additive"
+  my.k_l = NULL
 )
 }
 \arguments{
-\item{x}{Numeric vector. Time series to seasonally adjust}
-
 \item{dates}{a vector of class "Date", containing the data dates}
 
 \item{out.tolerance}{t-stat threshold for outliers (see Findley et al., 1998)}
@@ -26,6 +23,8 @@ find_outliers(
 \item{H}{(optional) Matrix with holiday and trading day variables}
 
 \item{my.k_l}{(optional) Vector with the number of fourier terms to capture the yearly and monthly cycle. If NULL, would perform automatic search using AICc criterion}
+
+\item{x}{Numeric vector. Time series to seasonally adjust}
 
 \item{method}{Decomposition method: "additive" or "multiplicative". By default uses the additive method}
 }
@@ -39,12 +38,12 @@ Searches for additive outliers using the method described in Appendix C of Findl
 If the number of trigonometric variables is not specified will search automatically through the model space to identify the best number of trigonometric variables, with the lowest AIC, AICc or BIC value.
 }
 \examples{
-
 \donttest{
-#Not run:
+# Not run:
 # Searching for additive outliers in Gasoline data
 data(gasoline.data)
-ao_list=find_outliers(x=gasoline.data$y,dates = gasoline.data$date)}
+ao_list <- find_outliers(x = gasoline.data$y, dates = gasoline.data$date)
+}
 
 }
 \references{
