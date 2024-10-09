@@ -158,7 +158,8 @@ boiwsa <- function (x,
       m = m,
       x = x,
       dates = dates,
-      ao.list = lubridate::as_date(ao.list)
+      ao.list = lubridate::as_date(ao.list),
+      log = method == "multiplicative"
     )
   } else {
     message("Series should not be a candidate for seasonal adjustment because automatic selection found k=l=0")
@@ -174,7 +175,8 @@ boiwsa <- function (x,
       m = NULL,
       x = x,
       dates = dates,
-      ao.list = NULL
+      ao.list = NULL,
+      log = NULL
     )
   }
   class(final_output) <- "boiwsa"
