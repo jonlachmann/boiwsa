@@ -95,9 +95,7 @@ boiwsa <- function(x,
   }
 
   if (sum(my.k_l > 0)) {
-    dates <- c(dates, "2024-09-18", "2024-09-25")
     X <- fourier_vars(k = my.k_l[1], l = my.k_l[2], dates = dates)
-    AO <- rbind(AO, 0, 0)
     Xs <- cbind(X, H, AO)
 
     # Creating weights
