@@ -2,7 +2,6 @@
 #'
 #' Creates sine and cosine variables to capture intramonthly and intrayearly cycles.
 #'
-#' @importFrom Hmisc yearDays
 #' @importFrom lubridate days_in_month day yday
 #'
 #' @param k Number of pairs of the yearly cycle trigonometric variables
@@ -49,7 +48,7 @@ fourier_vars <- function(k = 1, l = 1, dates) {
     # creating yearly cycle variables
 
     yt <- lubridate::yday(dates)
-    Ny <- Hmisc::yearDays(dates)
+    Ny <- yearDays(dates)
 
     X <- matrix(NA_real_, nrow = length(dates), ncol = 2 * k)
 
