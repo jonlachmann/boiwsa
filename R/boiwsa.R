@@ -217,7 +217,7 @@ modelFactors <- function (dates, my.years, X, Xs, Wi, H, y, nc.ao, n_hist) {
     sf[n.i] <- (Xs[, 1:(length(beta) - nc.ao)] %*% beta[1:(length(beta) - nc.ao)])[n.i]
 
     if (!is.null(H)) {
-      hol.factors[n.i] <- (Xs[, (p + 1):(p + H_p)] %*% beta[(p + 1):(p + H_p)])[n.i]
+      hol.factors[n.i] <- (Xs[, (p + 1):(p + H_p), drop = FALSE] %*% beta[(p + 1):(p + H_p), drop = FALSE])[n.i]
     }
 
     if (nc.ao > 0) {
