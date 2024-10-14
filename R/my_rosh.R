@@ -5,7 +5,6 @@
 #'
 #' @import lubridate
 #' @import dplyr
-#' @importFrom tidyr fill
 #' @importFrom rlang .data
 #'
 #' @param dates a vector of class "Date", containing the data dates
@@ -32,11 +31,11 @@ my_rosh <- function(dates, holiday.dates, start = -11, end = 12) {
 
   df2 <- merge(df0, df1, by = "date", all = T)
 
-  df2 %>% tidyr::fill("weekly", .direction = "up") -> df2
+  df2 <- locf.na(df2, "weekly")
 
   df2$hag <- 0
 
-  for (i in 1:length(holiday.dates)) {
+  for (i in seq_along(holiday.dates)) {
     hdate <- holiday.dates[i]
 
     df2[(df2$date <= hdate + lubridate::days(end)) & (df2$date >= hdate - lubridate::days(start)), "hag"] <- 1

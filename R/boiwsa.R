@@ -258,3 +258,15 @@ createWeights <- function (dates, my.years, r) {
   }
   return(Wi)
 }
+
+locf.na <- function (df, col) {
+  last <- NA
+  for (i in rev(seq_len(nrow(df)))) {
+    if (is.na(df2[i, col])) {
+      df[i, col] <- last
+    } else {
+      last <- df[i, col]
+    }
+  }
+  return(df)
+}

@@ -13,6 +13,7 @@ boiwsa(
   ao.list = NULL,
   my.k_l = NULL,
   H = NULL,
+  horizon = 0,
   ic = "aicc",
   method = "additive"
 )

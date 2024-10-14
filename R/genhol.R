@@ -7,7 +7,6 @@
 #'
 #' @import lubridate
 #' @import dplyr
-#' @importFrom tidyr fill
 #' @importFrom rlang .data
 #'
 #' @param dates a vector of class "Date", containing the data dates
@@ -34,7 +33,7 @@ genhol <- function(dates, holiday.dates, start = 7, end = 7) {
 
   df2 <- merge(df0, df1, by = "date", all = T)
 
-  df2 %>% tidyr::fill("weekly", .direction = "up") -> df2
+  df2 <- locf.na(df2, "weekly")
 
   df2$hag <- 0
 
