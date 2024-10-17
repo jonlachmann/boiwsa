@@ -86,7 +86,7 @@ boiwsa <- function (x,
 
   if (sum(my.k_l > 0)) {
     X <- fourier_vars(k = my.k_l[1], l = my.k_l[2], dates = c(dates, forecast_dates))
-    AO <- rbind(AO, matrix(0, horizon, ncol(AO)))
+    if (!is.null(AO)) AO <- rbind(AO, matrix(0, horizon, ncol(AO)))
     Xs <- cbind(X, H, AO)
 
     # Creating weights
@@ -117,7 +117,7 @@ boiwsa <- function (x,
     my.k_l <- get_kl(my.k_l, y, dates, H, AO, ic)
 
     X <- fourier_vars(k = my.k_l[1], l = my.k_l[2], dates = c(dates, forecast_dates))
-    AO <- rbind(AO, matrix(0, horizon, ncol(AO)))
+    if (!is.null(AO)) AO <- rbind(AO, matrix(0, horizon, ncol(AO)))
     Xs <- cbind(X, H, AO)
     Xs_hist <- Xs[seq_len(length(dates)), , drop = FALSE]
 
